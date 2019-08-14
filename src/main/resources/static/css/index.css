@@ -1,0 +1,17 @@
+main{
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.img-rounded{
+    width: 38px;
+    height: 38px;
+}
+.text-desc{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+.context{
+    margin-left: 20px;
+}
+

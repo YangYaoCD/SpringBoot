@@ -1,0 +1,22 @@
+.img-circle{
+    width: 20px;
+    height: 20px;
+}
+.img-rounded{
+    width: 20px;
+    height: 20px;
+}
+.comment{
+
+}
+.media{
+    margin: 10px;
+}
+#user{
+    padding-top: 4px;
+}
+.comment-btn{
+    float: right;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}

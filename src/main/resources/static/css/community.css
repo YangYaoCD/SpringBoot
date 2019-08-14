@@ -1,0 +1,19 @@
+main{
+    margin: 30px;
+}
+body{
+    background-color: white;
+}
+main{
+    background-color: white;
+}
+nav{
+    background-color: white;
+}
+.btn-success{
+    float: right;
+    margin-bottom: 15px;
+}
+.sub{
+    float: right;
+}

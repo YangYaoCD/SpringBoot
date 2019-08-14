@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="navigation">
+    <nav>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">杨垚主页</span>
+                    </button>
+                    <a class="navbar-brand" href="/">社区</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                    <form class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="搜索问题">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li th:if="${session?.user!=null}">
+                            <a href="/publish">发布</a>
+                        </li>
+                        <li th:if="${session?.user !=null}">
+                            <img class="media-object img-rounded" th:src="${session?.user?.avatarUrl}" style="width: 18px;height: 18px;margin-top: 15px">
+                        </li>
+                        <li class="dropdown" th:if="${session?.user !=null}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >
+                                <span th:text="${session?.user?.getName()}"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/profile/questions">我的问题</a></li>
+                                <li><a href="/logout">退出登陆</a></li>
+                            </ul>
+                        </li>
+                        <li th:if="${session?.user==null}"><a href="https://github.com/login/oauth/authorize?client_id=4146ce3195480451f292&redirect_uri=http://localhost:8585/callback&scope=user&state=1">登录</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </nav>
+</div>
+</body>
+</html>

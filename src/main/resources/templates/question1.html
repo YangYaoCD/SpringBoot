@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title th:text="${question.title}"></title>
+    <meta name="keywords" content="elasticsearch,平稳,数据,迁移" />
+    <meta name="description" content="ElasticSearch 如何平稳的做数据迁移 - 如题"  />
+    <base href="https://elasticsearch.cn/" /><!--[if IE]></base><![endif]-->
+    <link href="https://elasticsearch.cn/static/css/default/img/favicon.ico?v=20151125" rel="shortcut icon" type="image/x-icon" />
+
+    <link rel="stylesheet" type="text/css" href="https://elasticsearch.cn/static/css/bootstrap.css?v=3" />
+    <link rel="stylesheet" type="text/css" href="https://elasticsearch.cn/static/css/icon.css?v=4" />
+
+    <link href="https://elasticsearch.cn/static/css/default/common.css?v=12?v=20151125" rel="stylesheet" type="text/css" />
+    <link href="https://elasticsearch.cn/static/css/default/link.css?v=20151125" rel="stylesheet" type="text/css" />
+    <link href="https://elasticsearch.cn/static/js/plug_module/style.css?v=20151125" rel="stylesheet" type="text/css" />
+
+
+    <script type="text/javascript">
+        var _C2A0B0EA6BDC0359DEDD88BFD0096B14="";
+        var G_POST_HASH=_C2A0B0EA6BDC0359DEDD88BFD0096B14;
+        var G_INDEX_SCRIPT = "";
+        var G_SITE_NAME = "Elastic 中文社区";
+        var G_BASE_URL = "https://elasticsearch.cn";
+        var G_STATIC_URL = "https://elasticsearch.cn/static";
+        var G_UPLOAD_URL = "https://elasticsearch.cn/uploads";
+        var G_USER_ID = "";
+        var G_USER_NAME = "";
+        var G_UPLOAD_ENABLE = "N";
+        var G_UNREAD_NOTIFICATION = 0;
+        var G_NOTIFICATION_INTERVAL = 100000;
+        var G_CAN_CREATE_TOPIC = "";
+        var G_EDITOR_MODE = "0";
+
+
+    </script>
+    <script src="https://elasticsearch.cn/static/js/jquery.2.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/jquery.form.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/plug_module/plug-in_module.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/aws.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/aw_template.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/app.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/editor/ckeditor/ckeditor.js?v=20151125" type="text/javascript"></script>
+    <script src="https://elasticsearch.cn/static/js/editor/ckeditor/adapters/jquery.js?v=20151125" type="text/javascript"></script>
+    <script type="text/javascript" src="https://elasticsearch.cn/static/js/compatibility.js"></script>
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="https://elasticsearch.cn/static/js/respond.js"></script>
+    <![endif]-->
+
+</head>
+<noscript unselectable="on" id="noscript">
+    <div class="aw-404 aw-404-wrap container">
+        <img src="https://elasticsearch.cn/static/common/no-js.jpg">
+        <p>你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!</p>
+    </div>
+</noscript>
+<body>
+<nav th:insert="~{nav.html :: navigation}"></nav>
+<main>
+<div class="aw-container-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="aw-content-wrap clearfix">
+                <div class="col-sm-12 col-md-9 aw-main-content">
+
+                    <div class="aw-mod aw-question-detail aw-item">
+                        <div class="mod-head">
+                            <h1>
+                                ElasticSearch 如何平稳的做数据迁移							</h1>
+
+
+
+                            <em class="text-color-999">								<a class="aw-question-tags" href="https://elasticsearch.cn/question/category-2">Elasticsearch </a>
+                                | 作者 <a class="aw-user-name" href="https://elasticsearch.cn/people/Majiang" data-id="6950">Majiang</a>
+                                | 发布于2019年05月16日								| 阅读数：<span>332</span>
+                            </em>
+
+                            <hr />
+
+                            <!-- Baidu Button BEGIN -->
+                            <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more">分享到：</a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友">QQ好友</a><a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记">印象笔记</a><a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记">有道云笔记</a></div>
+                            <script type="text/javascript">window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16},"image":{"viewList":["qzone","tsina","weixin","sqq","evernotecn","mail","youdao"],"viewText":"分享到：","viewSize":"16"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+                            <!-- Baidu Button END -->
+                            <hr />
+
+                        </div>
+                        <div class="mod-body">
+                            <div class="content markitup-box">
+                                如题
+                            </div>
+                        </div>
+                        <div class="mod-footer">
+                            <hr />
+
+                            <!-- 话题推荐bar -->
+                            <!-- 话题推荐bar -->
+
+                            <!-- 话题bar -->
+                            <div class="aw-mod aw-topic-bar" id="question_topic_editor" data-type="question" data-id="7640">
+
+                                <div class="tag-bar clearfix">
+
+                                </div>
+                                <hr />
+
+                            </div>
+                            <!-- end 话题bar -->
+
+
+                            <div class="meta">
+                                <span class="text-color-999">2019-05-16</span>
+
+                                <a data-id="7640" data-type="question" class="aw-add-comment text-color-999 " data-comment-count="0" data-first-click="hide"><i class="icon icon-comment"></i>添加评论</a>
+
+
+
+                                <div class="pull-right more-operate">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- 站内邀请 -->
+                        <div class="aw-invite-box hide">
+                            <div class="mod-head clearfix">
+                                <div class="search-box pull-left">
+                                    <input id="invite-input" class="form-control" type="text"  placeholder="搜索你想邀请的人..."/>
+                                    <div class="aw-dropdown">
+                                        <p class="title">没有找到相关结果</p>
+                                        <ul class="aw-dropdown-list"></ul>
+                                    </div>
+                                    <i class="icon icon-search"></i>
+                                </div>
+                                <div class="invite-list pull-left hide">
+                                    已邀请:
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end 站内邀请 -->
+                        <!-- 相关链接 -->
+                        <div class="aw-question-related-box hide">
+                            <form action="https://elasticsearch.cn/publish/ajax/save_related_link/" method="post" onsubmit="return false" id="related_link_form">
+                                <div class="mod-head">
+                                    <h2>与内容相关的链接</h2>
+                                </div>
+                                <div class="mod-body clearfix">
+                                    <input type="hidden" name="item_id" value="7640" />
+                                    <input type="text" class="form-control pull-left" name="link" value="" />
+
+                                    <a onclick="AWS.ajax_post($('#related_link_form'));" class="pull-left btn btn-success">提交</a>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end 相关链接 -->
+
+                    </div>
+
+
+
+                    <div class="aw-mod aw-question-comment">
+                        <div class="mod-head">
+                            <ul class="nav nav-tabs aw-nav-tabs active">
+
+                                <h2 class="hidden-xs">17 个回复</h2>
+                            </ul>
+                        </div>
+                        <div class="mod-body aw-feed-list">
+
+                            <div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_11616">
+                                <div class="mod-head">
+                                    <a class="anchor" name="answer_11616"></a>
+                                    <!-- 用户头像 -->
+                                    <a class="aw-user-img aw-border-radius-5" href="https://elasticsearch.cn/people/Majiang" data-id="6950"><img src="https://elasticsearch.cn/static/common/avatar-mid-img.png" alt="" /></a>										<!-- end 用户头像 -->
+                                    <div class="title">
+                                        <p>
+                                            <a class="aw-user-name" href="https://elasticsearch.cn/people/Majiang" data-id="6950">Majiang</a>
+                                        </p>
+                                        <p class="text-color-999 aw-agree-by hide">
+                                            赞同来自:
+
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mod-body clearfix">
+                                    <!-- 评论内容 -->
+                                    <div class="markitup-box">
+                                        评论										</div>
+
+
+                                    <!-- end 评论内容 -->
+                                </div>
+                                <div class="mod-footer">
+                                    <!-- 社交操作 -->
+                                    <div class="meta clearfix">
+                                        <span class="text-color-999 pull-right">2019-05-29</span>
+                                        <!-- 投票栏 -->
+                                        <span class="operate">
+												<a class="agree  disabled" ><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">0</b></a>
+																							</span>
+                                        <!-- end 投票栏 -->
+                                        <span class="operate">
+												<a class="aw-add-comment" data-id="11616" data-type="answer" data-comment-count="0" data-first-click="hide" href="javascript:;"><i class="icon icon-comment"></i> 0</a>
+											</span>
+                                        <!-- 可显示/隐藏的操作box -->
+                                        <div class="more-operate">
+
+                                            <div class="btn-group pull-left">
+                                                <a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="icon icon-share"></i> 分享													</a>
+                                                <div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+                                                    <ul class="aw-dropdown-list">
+                                                        <li><a onclick="AWS.User.share_out({webid: 'tsina', title: $(this).parents('.aw-item').find('.markitup-box').text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end 可显示/隐藏的操作box -->
+
+                                    </div>
+                                    <!-- end 社交操作 -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mod-footer">
+                            <div class="aw-load-more-content hide" id="load_uninterested_answers">
+                                <span class="text-color-999 aw-alert-box text-color-999" href="javascript:;" tabindex="-1" onclick="AWS.alert('被折叠的回复是被你或者被大多数用户认为没有帮助的回复');">为什么被折叠?</span>
+                                <a href="javascript:;" class="aw-load-more-content"><span class="hide_answers_count">0</span> 个回复被折叠</a>
+                            </div>
+
+                            <div class="hide aw-feed-list" id="uninterested_answers_list"></div>
+                        </div>
+
+                    </div>
+                    <!-- end 问题详细模块 -->
+
+                    <!-- 回复编辑器 -->
+                    <div class="aw-mod aw-replay-box question">
+                        <a name="answer_form"></a>
+                        <p align="center">要回复问题请先<a href="https://elasticsearch.cn/account/login/">登录</a>或<a href="https://elasticsearch.cn/account/register/">注册</a></p>
+                    </div>
+                    <!-- end 回复编辑器 -->
+                </div>
+                <!-- 侧边栏 -->
+                <div class="col-md-3 aw-side-bar hidden-xs hidden-sm">
+
+                    <!-- 发起人 -->
+                    <div class="aw-mod">
+                        <div class="mod-head">
+                            <h3>发起人</h3>
+                        </div>
+                        <div class="mod-body">
+                            <dl>
+                                <dt class="pull-left aw-border-radius-5">
+                                    <a href="https://elasticsearch.cn/people/Majiang"><img alt="Majiang" src="https://elasticsearch.cn/static/common/avatar-mid-img.png" /></a>
+                                </dt>
+                                <dd class="pull-left">
+                                    <a class="aw-user-name" href="https://elasticsearch.cn/people/Majiang" data-id="6950">Majiang</a>
+                                    <p></p>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <!-- end 发起人 -->
+
+
+                    <script language="javascript" src="/static/js/promotion/global_banner.js"></script>
+
+
+
+
+                    <div class="ad_bg_253_100">
+                        <!--为了明年的服务器-->
+                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                        <ins class="adsbygoogle"
+                             style="display:inline-block;width:253px;height:213px"
+                             data-ad-client="ca-pub-9516277730901843"
+                             data-ad-slot="2270455870"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+
+                    <!-- 相关问题 -->
+                    <div class="aw-mod">
+                        <div class="mod-head">
+                            <h3>相关问题</h3>
+                        </div>
+                        <div class="mod-body font-size-12">
+                            <ul>
+                                <li><a href="https://elasticsearch.cn/question/103">3千万数据，如何设计集群</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end 相关问题 -->
+
+
+
+                    <!-- 问题状态 -->
+                    <div class="aw-mod question-status">
+                        <div class="mod-head">
+                            <h3>问题状态</h3>
+                        </div>
+                        <div class="mod-body">
+                            <ul>
+                                <li>最新活动: <span class="aw-text-color-blue">2019-06-01 09:24</span></li>
+                                <li>浏览: <span class="aw-text-color-blue">332</span></li>
+                                <li>关注: <span class="aw-text-color-blue">2</span> 人</li>
+
+                                <li class="aw-border-radius-5" id="focus_users"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end 问题状态 -->
+                </div>
+                <!-- end 侧边栏 -->
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+<script type="text/javascript">
+    var ATTACH_ACCESS_KEY = 'c2a0b0ea6bdc0359dedd88bfd0096b14';
+    var ITEM_IDS = '';
+    var COMMENT_UNFOLD = 'all';
+    var QUESTION_ID = 7640;
+    var UNINTERESTED_COUNT = 5;
+    var ANSWER_EDIT_TIME = 600000;
+    var USER_ANSWERED = '';
+    var UPLOAD_ENABLE = 'N';
+    var ANSWER_TYPE = 'answer';
+</script>
+
+<script type="text/javascript" src="https://elasticsearch.cn/static/js/app/question_detail.js"></script>
+
+<div class="aw-footer-wrap">
+    <div class="aw-footer">
+        Copyright © 2019 · <a target="_blank" title="简单来说就是转载必须注明本站链接！" href="http://creativecommons.org/licenses/by/3.0/cn/">CC BY-NC-SA 3.0</a></span>
+
+        <span class="hidden-xs"> · <a href="http://elasticsearch.cn/" target="blank">Elastic中文社区</a></span>
+
+    </div>
+</div>
+
+<a class="aw-back-top hidden-xs" href="javascript:;" onclick="$.scrollTo(1, 600, {queue:true});"><i class="icon icon-up"></i></a>
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?e6293f1e557051599b149ca729a41cc0";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-57RRPQR');</script>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-57RRPQR"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- DO NOT REMOVE -->
+<div id="aw-ajax-box" class="aw-ajax-box"></div>
+
+<div style="display:none;" id="__crond">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#__crond').html(unescape('%3Cimg%20src%3D%22' + G_BASE_URL + '/crond/run/1564025641%22%20width%3D%221%22%20height%3D%221%22%20/%3E'));
+        });
+    </script>
+</div>
+
+<!-- Escape time: 0.015986919403076 --><!-- / DO NOT REMOVE -->
+
+</body>
+</html>
