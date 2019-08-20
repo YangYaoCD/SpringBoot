@@ -31,4 +31,8 @@ public class IndexController {
         model.addAttribute("questions",questionPageDTO);
         return "index";
     }
+    @RequestMapping("test")
+    public String test(){
+        return "test";
+    }
 }

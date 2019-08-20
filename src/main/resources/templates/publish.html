@@ -33,7 +33,7 @@
                     </div>
                     <div class="form-group">
                         <label for="tag">添加标签：</label>
-                        <input type="text" class="form-control" id="tag" required placeholder="输入标签，以英文逗号分隔" name="title" th:value="${tag}">
+                        <input type="text" class="form-control" id="tag" required placeholder="输入标签，以英文逗号分隔" name="tag" th:value="${tag}">
                     </div>
                     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
                         <div class="alert alert-danger" th:text="${error}" th:if="${error!=null}"></div>

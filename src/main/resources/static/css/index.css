@@ -1,4 +1,9 @@
+body{
+    background-color: #e3e3e3;
+}
 main{
+    background-color: white;
+    margin-top: 60px;
     margin-left: 50px;
     margin-right: 50px;
 }

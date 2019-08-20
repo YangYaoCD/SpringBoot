@@ -25,8 +25,12 @@ public class PublishController {
     private QuestionService questionService;
 
     @RequestMapping("/publish/{id}")
-    public String edit(@PathVariable(name = "id")long id,Model model){
+    public String edit(@PathVariable(name = "id")long id,Model model,HttpServletRequest request){
         Question question = questionMapper.getById(id);
+        User user = (User) request.getSession().getAttribute("user");
+        if (user.getId()!=question.getCreator()){
+            throw new CustomerException(CustomizeErrorCode.USR_WRONG_OPERATER);
+        }
         if (question==null){
             throw new CustomerException(CustomizeErrorCode.PUBLISH_NOT_FOUND);
         }
@@ -41,9 +45,24 @@ public class PublishController {
         return "publish";
     }
 
-    @PostMapping("/publish")
-    public String doPublish(String title, String description, String tag,
-                            HttpServletRequest request, Model model,@RequestParam(value ="id", required =false) long id){
+//    @RequestMapping("/publishq")
+//    public String doPublish(String title,
+//                            String description,
+//                            String tag,
+//                            HttpServletRequest request,
+//                            Model model){
+//        System.out.println(title);
+//        System.out.println(description);
+//        System.out.println(tag);
+//        return "redirect:/";
+//    }
+
+    @RequestMapping("/publish")
+    public String doPublish(String title,
+                            String description,
+                            String tag,
+                            HttpServletRequest request,
+                            Model model){//@RequestParam(value ="id", required =false) long id
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
@@ -55,7 +74,9 @@ public class PublishController {
             return "publish";
         }
         question.setCreator(user.getId());
-        question.setId(id);
+//        if (id!=0){
+//            question.setId(id);
+//        }
         model.addAttribute("title",title);
         questionService.createOrUpdate(question);
         return "redirect:/";

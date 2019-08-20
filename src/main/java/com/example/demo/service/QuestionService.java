@@ -53,7 +53,7 @@ public class QuestionService {
 
     }
 
-    public QuestionPageDTO list(Integer userId, Integer currentPage, Integer size) {
+    public QuestionPageDTO list(long userId, Integer currentPage, Integer size) {
         QuestionPageDTO questionPageDTO = new QuestionPageDTO();
         //先获取记录总数
         Integer totalCount = questionMapper.countById(userId);
