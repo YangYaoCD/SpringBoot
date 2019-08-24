@@ -1,21 +1,23 @@
 package com.example.demo.service;
 
 
-import ch.qos.logback.core.db.dialect.DBUtil;
+import com.example.demo.dto.PaginationDTO;
 import com.example.demo.dto.QuestionDTO;
-import com.example.demo.dto.QuestionPageDTO;
 import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.CustomizeErrorCode;
 import com.example.demo.mapper.QuestionMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.Question;
 import com.example.demo.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //组装user和question时的中间层
 @Service
@@ -24,8 +26,8 @@ public class QuestionService {
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
-    public QuestionPageDTO List(Integer currentPage, Integer size) {
-        QuestionPageDTO questionPageDTO = new QuestionPageDTO();
+    public PaginationDTO<QuestionDTO> List(Integer currentPage, Integer size) {
+        PaginationDTO<QuestionDTO> questionPageDTO = new PaginationDTO<>();
         //先获取记录总数
         Integer totalCount = questionMapper.count();
         //计算并设置总页数
@@ -43,7 +45,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        questionPageDTO.setQuestionDTOS(questionDTOS);
+        questionPageDTO.setLists(questionDTOS);
         questionPageDTO.setShowPrevious(questionPageDTO.getCurrentPage());
         questionPageDTO.setShowFirstPage(questionPageDTO.getCurrentPage());
         questionPageDTO.setShowNext(questionPageDTO.getCurrentPage(),questionPageDTO.getTotalPage());
@@ -53,8 +55,8 @@ public class QuestionService {
 
     }
 
-    public QuestionPageDTO list(long userId, Integer currentPage, Integer size) {
-        QuestionPageDTO questionPageDTO = new QuestionPageDTO();
+    public PaginationDTO<QuestionDTO> list(long userId, Integer currentPage, Integer size) {
+        PaginationDTO<QuestionDTO> questionPageDTO = new PaginationDTO<>();
         //先获取记录总数
         Integer totalCount = questionMapper.countById(userId);
         //计算并设置总页数
@@ -71,7 +73,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        questionPageDTO.setQuestionDTOS(questionDTOS);
+        questionPageDTO.setLists(questionDTOS);
         questionPageDTO.setShowPrevious(questionPageDTO.getCurrentPage());
         questionPageDTO.setShowFirstPage(questionPageDTO.getCurrentPage());
         questionPageDTO.setShowNext(questionPageDTO.getCurrentPage(),questionPageDTO.getTotalPage());
@@ -110,5 +112,23 @@ public class QuestionService {
 
     public void incView(long id) {
         questionMapper.updateviewCount(id);
+    }
+
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+        String tagString = queryDTO.getTag();
+        if (StringUtils.isBlank(tagString)){
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(tagString, ",");
+        String tagStr = Arrays.stream(tags).collect(Collectors.joining("|"));
+        System.out.println(tagStr);
+        List<Question> selectRelatedList = questionMapper.selectRelated(tagStr, queryDTO.getId());
+        List<QuestionDTO> questionDTOList = selectRelatedList.stream().map(question -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+
+        return questionDTOList;
     }
 }

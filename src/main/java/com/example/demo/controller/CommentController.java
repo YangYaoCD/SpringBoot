@@ -1,25 +1,21 @@
 package com.example.demo.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.example.demo.CommentTypeEnum;
+import com.example.demo.enums.CommentTypeEnum;
 import com.example.demo.dto.CommentCreateDTO;
 import com.example.demo.dto.CommentDTO;
 import com.example.demo.dto.ResultDTO;
-import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.CustomizeErrorCode;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.model.Comment;
 import com.example.demo.model.User;
 import com.example.demo.service.CommentService;
-import org.h2.util.StringUtils;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
@@ -49,7 +45,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0);
-        commentService.insert(comment);
+        commentService.insert(comment,user);
         ResultDTO resultDTO = ResultDTO.okOf();
         return resultDTO;
     }

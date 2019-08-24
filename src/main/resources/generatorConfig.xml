@@ -5,10 +5,11 @@
 
 <generatorConfiguration>
     <context id="DB2Tables" targetRuntime="MyBatis3">
-        <jdbcConnection driverClass="org.h2.Driver"
-                        connectionURL="jdbc:h2:~/user"
-                        userId="sa"
-                        password="sa">
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/community?serverTimezone=UTC"
+                        userId="root"
+                        password="15002859227">
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <javaTypeResolver >
@@ -28,7 +29,8 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User" >
-        </table>
+        <table tableName="notification" domainObjectName="Notification" ></table>
+        <table tableName="user" domainObjectName="User" ></table>
+        <!--mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate-->
     </context>
 </generatorConfiguration>

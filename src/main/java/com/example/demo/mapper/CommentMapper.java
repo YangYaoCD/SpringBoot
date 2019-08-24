@@ -5,6 +5,7 @@ import com.example.demo.model.Comment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -19,4 +20,7 @@ public interface CommentMapper {
 
     @Select("select * from comment where parent_id=#{id} and type=#{type} ORDER BY gmt_create DESC")
     List<Comment> selectByParentIdAndType(long id, Integer type);
+
+    @Update("update comment set comment_count=comment_count+1 where id=#{id}")
+    void updateCommentCount(long id);
 }

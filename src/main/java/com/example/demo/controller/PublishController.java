@@ -1,15 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.QuestionPageDTO;
 import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.CustomizeErrorCode;
 import com.example.demo.mapper.QuestionMapper;
-import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.Question;
 import com.example.demo.model.User;
 import com.example.demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +34,8 @@ public class PublishController {
         model.addAttribute("question",question);
         model.addAttribute("title",question.getTitle());
         model.addAttribute("tag",question.getTag());
+//        List<String> tags= Lists.newArrayList("java","spring boot","spring");
+//        model.addAttribute("tags",tags);
         return "publish";
     }
 
@@ -45,17 +44,6 @@ public class PublishController {
         return "publish";
     }
 
-//    @RequestMapping("/publishq")
-//    public String doPublish(String title,
-//                            String description,
-//                            String tag,
-//                            HttpServletRequest request,
-//                            Model model){
-//        System.out.println(title);
-//        System.out.println(description);
-//        System.out.println(tag);
-//        return "redirect:/";
-//    }
 
     @RequestMapping("/publish")
     public String doPublish(String title,

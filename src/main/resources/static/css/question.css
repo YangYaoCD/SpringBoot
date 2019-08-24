@@ -25,7 +25,6 @@ main{
     padding-top: 4px;
 }
 .comment-btn{
-    float: right;
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -55,18 +54,50 @@ main{
 #comment-submit{
     margin-bottom: -12px;
 }
+.sub-comments{
+    border: #c4e3f3 solid 1px;
+    margin-top: 10px;
+    border-radius: 5px;
+    padding-top: 20px;
+}
 .sub-comments .btn{
     margin: 10px 0px;
 }
 .glyphicon-pencil{
     padding: 5px;
 }
-.collapse{
-    border: #c4e3f3 solid 1px;
-    margin-top: 10px;
-    border-radius: 5px;
-    padding-top: 20px;
-}
 .menu > .active{
     color: #265a88;
+}
+.label-info{
+    margin-right: 10px;
+}
+.question-tags{
+    margin: -12px 0 -12px 0;
+}
+.ul-ralated{
+    list-style: none;
+    font-size: 12px;
+    padding-left: 5px;
+    text-decoration: none;
+}
+.a-related{
+    cursor: pointer;
+
+}
+.a-related:link{
+    text-decoration:none;
+}
+.a-related:visited{
+    text-decoration:none;
+}
+.a-related:hover{
+    text-decoration:none;
+    background-color: #9acfea;
+}
+.a-related:active{
+    text-decoration:none;
+}
+.img-ad{
+    width: 100%;
 }
