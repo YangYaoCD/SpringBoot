@@ -40,17 +40,21 @@ public class ProfileController {
             PaginationDTO paginationDTO=notificationService.list(user.getId(),currentPage,size);
             NotificationExample notificationExample = new NotificationExample();
             notificationExample.createCriteria().andReceiverEqualTo(user.getId());
-            Integer totalCount =notificationService.getTotalCount(user.getId());
-            model.addAttribute("replyCount",totalCount);
             model.addAttribute("repliesPageDTO",paginationDTO);
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
         }else {
             model.addAttribute("section","question");
             questionListUtil(model, currentPage, size, user);
+
         }
         return "profile";
 
+    }
+
+    private void setUnreadCount(Model model, User user) {
+        Integer totalCount = notificationService.UnreadCount(user.getId());
+        model.addAttribute("unreadCount", totalCount);
     }
 
     private void questionListUtil(Model model, @RequestParam(name = "currentPage", defaultValue = "1", required = false) Integer currentPage, @RequestParam(name = "size", defaultValue = "3", required = false) Integer size, User user) {

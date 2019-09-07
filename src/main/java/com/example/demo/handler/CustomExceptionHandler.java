@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.demo.dto.ResultDTO;
 import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.CustomizeErrorCode;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,8 +24,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                          HttpServletResponse response,
                          Throwable e, Model model){
         String contentType = request.getContentType();
+        if (contentType==null|| !StringUtils.equals(contentType,"application/json")){
+            if (e instanceof CustomerException){
+                model.addAttribute("message",e.getMessage());
+                model.addAttribute("code",((CustomerException) e).getCode());
+            }else {
+                model.addAttribute("message",CustomizeErrorCode.SYS_ERROR.getMessage());
+                model.addAttribute("code",CustomizeErrorCode.SYS_ERROR.getCode());
+            }
+            return new ModelAndView("error");
+        }
         if (contentType.equals("application/json")){
-            ResultDTO resultDTO=null;
+            ResultDTO resultDTO;
             if (e instanceof CustomerException){
                 resultDTO= ResultDTO.errorOf((CustomerException) e);
             }else {
@@ -42,17 +53,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.printStackTrace();
             }
             return null;
-
-        }else {
-            if (e instanceof CustomerException){
-                model.addAttribute("message",e.getMessage());
-                model.addAttribute("code",((CustomerException) e).getCode());
-            }else {
-                model.addAttribute("message",CustomizeErrorCode.SYS_ERROR.getMessage());
-                model.addAttribute("code",CustomizeErrorCode.SYS_ERROR.getCode());
-            }
-            return new ModelAndView("error");
         }
+        return null;
     }
 
 }

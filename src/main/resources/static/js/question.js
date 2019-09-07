@@ -53,10 +53,6 @@ function collapseComments(e) {
                     })).append($("<span/>", {
                         "class": "glyphicon glyphicon-thumbs-down",
                     })).append($("<span/>", {
-                        "class": "glyphicon glyphicon-comment",
-                        "data":comment.id,
-                        "onclick":"collapseComments(this)"
-                    })).append($("<span/>", {
                         "class": "pull-right",
                         "html":moment(comment.gmtCreate).format('YYYY-MM-DD')
                     })));

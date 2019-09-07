@@ -47,7 +47,7 @@ public class CommentService {
             if (dbComment==null){
                 throw new CustomerException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
-            Question question = questionMapper.getById(comment.getParentId());
+            Question question = questionMapper.getById(dbComment.getParentId());
             if (question==null){
                 throw new CustomerException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
@@ -55,7 +55,7 @@ public class CommentService {
             commentMapper.insert(comment);
             //创建通知
             //ctrl+alt+m 抽取方法
-            createNotify(comment, dbComment.getCommentator(), commentor.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT.getType());
+            createNotify(comment, dbComment.getCommentator(), commentor.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT.getType(),question.getId());
         }else {
             //回复问题
             Question question = questionMapper.getById(comment.getParentId());
@@ -66,21 +66,27 @@ public class CommentService {
             questionMapper.incCommentCount(question);
 
             //创建通知
-            createNotify(comment,question.getCreator(),commentor.getName(),question.getTitle(), NotificationTypeEnum.REPLY_QUESTION.getType());
+            createNotify(comment,question.getCreator(),commentor.getName(),question.getTitle(), NotificationTypeEnum.REPLY_QUESTION.getType(),question.getId());
 
         }
     }
 
-    private void createNotify(Comment comment, long receiver, String notifierName, String outerTitle, int type) {
+    private void createNotify(Comment comment, long receiver, String notifierName, String outerTitle, int type, Long outerId) {
+        if (receiver==comment.getCommentator()){
+            return;
+        }
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(type);
-        notification.setOuterid(comment.getParentId());
+        long parentId = comment.getParentId();
+        //ctrl+alt+p 增加方法变量
+        notification.setOuterId(outerId);
         notification.setNotifier(comment.getCommentator());
-        notification.setStatus(NotificationStatusEnum.READ.getStatus());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
         notification.setReceiver(receiver);
         notification.setNotifierName(notifierName);
         notification.setOuterTitle(outerTitle);
+        System.out.println(notification.toString());
         notificationMapper.insert(notification);
     }
 

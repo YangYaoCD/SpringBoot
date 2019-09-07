@@ -5,6 +5,8 @@ import com.example.demo.exception.CustomizeErrorCode;
 import com.example.demo.mapper.QuestionMapper;
 import com.example.demo.model.Question;
 import com.example.demo.model.User;
+import com.example.demo.service.NavigationService;
+import com.example.demo.service.NotificationService;
 import com.example.demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,10 @@ public class PublishController {
     private QuestionMapper questionMapper;
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private NavigationService navigationService;
 
     @RequestMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id")long id,Model model,HttpServletRequest request){
@@ -40,7 +46,8 @@ public class PublishController {
     }
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(HttpServletRequest request,Model model){
+        notificationService.setReplyCount(request, model);
         return "publish";
     }
 
@@ -50,11 +57,15 @@ public class PublishController {
                             String description,
                             String tag,
                             HttpServletRequest request,
-                            Model model){//@RequestParam(value ="id", required =false) long id
+                            @RequestParam(value ="id", required =false) long id,
+                            Model model){//
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
+        if (id != 0){
+            question.setId(id);
+        }
         Cookie[] cookies = request.getCookies();
         User user = (User) request.getSession().getAttribute("user");
         if (user==null){

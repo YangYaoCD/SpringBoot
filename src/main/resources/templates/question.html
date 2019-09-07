@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="/static/css/question.css"/>
     <script src="/static/js/question.js" type="text/javascript"></script>
     <script src="/static/js/moment.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/static/css/editormd.preview.min.css" />
+    <script src="/static/js/editormd.min.js"></script>
+    <script src="/static/js/lib/marked.min.js"></script>
+    <script src="/static/js/lib/prettify.min.js"></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
 </head>
 <body>
 <nav th:insert="~{nav.html :: navigation}"></nav>
@@ -29,7 +34,15 @@
                         |阅读数：<span th:text="${question.viewCount}"></span>
                     </div>
                     <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}"></div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view" >
+                        <textarea style="display: none;" th:text="${question.description}"></textarea>
+                    </div>
+                    <script type="text/javascript">
+                        $(function() {
+                            editormd.markdownToHTML("question-view", {
+                            });
+                        });
+                    </script>
                     <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <!--标签-->
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 question-tags">
@@ -90,12 +103,12 @@
                         <div class="media">
                             <div class="media-left">
                                 <a href="#">
-                                    <img class="media-object img-rounded" id="rounded" th:src="${question.user.avatarUrl}">
+                                    <img class="media-object img-rounded" id="rounded" th:src="${session.user!=null?session.user.avatarUrl:'/static/img/ico/default-avatar.png'}">
                                 </a>
                             </div>
                             <div class="media-body" id="user">
                                 <h5 class="media-heading">
-                                    <span th:text="${question.user.name}"></span>
+                                    <span th:text="${session.user!=null?session.user.name:'未登录'}"></span>
                                 </h5>
                             </div>
                         </div>
@@ -144,5 +157,6 @@
         </div>
     </div>
 </main>
+<footer class="col-lg-9 col-lg-12 col-sm-12" th:insert="~{footer.html :: footer}"></footer>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.CommentDTO;
+import com.example.demo.dto.QuestionQueryDTO;
 import com.example.demo.model.Question;
 import org.apache.ibatis.annotations.*;
 
@@ -37,4 +38,10 @@ public interface QuestionMapper {
 
     @Select("select * from question where tag REGEXP #{tagR} AND id!=#{id}")
     List<Question> selectRelated(String tagR,long id);
+
+    @Select("select count(1) from question where title regexp #{search}")
+    Integer countBySearch(QuestionQueryDTO questionQueryDTO);
+
+    @Select("select * from question where title regexp #{search} ORDER BY gmt_create DESC limit #{offset},#{size}")
+    List<Question> ListBySearch(String search, Integer offset, Integer size);
 }

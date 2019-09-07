@@ -3,6 +3,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.PaginationDTO;
 import com.example.demo.dto.QuestionDTO;
+import com.example.demo.dto.QuestionQueryDTO;
 import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.CustomizeErrorCode;
 import com.example.demo.mapper.QuestionMapper;
@@ -26,16 +27,34 @@ public class QuestionService {
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
-    public PaginationDTO<QuestionDTO> List(Integer currentPage, Integer size) {
+    public PaginationDTO<QuestionDTO> List(String search,Integer currentPage, Integer size) {
+
+        if (StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search, " ");
+            search=Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
         PaginationDTO<QuestionDTO> questionPageDTO = new PaginationDTO<>();
         //先获取记录总数
-        Integer totalCount = questionMapper.count();
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount;
+        if (search==null){
+            totalCount = questionMapper.count();
+        }else {
+            totalCount = questionMapper.countBySearch(questionQueryDTO);
+        }
         //计算并设置总页数
         questionPageDTO.setTotalPage(totalCount,size);
         //计算并设置当前页的页码
         questionPageDTO.setCurrentPage(currentPage,questionPageDTO.getTotalPage());
         Integer offset=size*(questionPageDTO.getCurrentPage()-1);
-        List<Question> questionList=questionMapper.List(offset,size);
+        List<Question> questionList;
+        if (search==null){
+            questionList=questionMapper.List(offset,size);
+        }else {
+            questionList=questionMapper.ListBySearch(search,offset,size);
+        }
         List<QuestionDTO> questionDTOS=new ArrayList<QuestionDTO>();
         for (Question question:questionList
              ) {
@@ -95,14 +114,14 @@ public class QuestionService {
     }
 
     public void createOrUpdate(Question question) {
-        if (question.getId()==null){
+        if (null==question.getId()){
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
             question.setViewCount(0);
             question.setLikeCount(0);
             questionMapper.create(question);
         }else {
-            question.setGmtModified(question.getGmtCreate());
+            question.setGmtModified(System.currentTimeMillis());
             Integer update = questionMapper.update(question);
             if (update!=1){
                 throw new CustomerException(CustomizeErrorCode.QUESTION_NOT_FOUND);

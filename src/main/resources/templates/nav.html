@@ -19,9 +19,9 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-                <form class="navbar-form navbar-left">
+                <form class="navbar-form navbar-left" action="/">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索问题">
+                        <input type="text" class="form-control" placeholder="搜索问题" name="search" th:value="${session.search}">
                     </div>
                     <button type="submit" class="btn btn-default">搜索</button>
                 </form>
@@ -31,7 +31,7 @@
                         <a href="/publish">发布</a>
                     </li>
                     <li th:if="${session?.user!=null}">
-                        <a href="/profile/replies">通知<span class="badge" th:text="${replyCount}"></span></a>
+                        <a href="/profile/replies">通知<span class="badge" th:text="${session.unreadCount}"></span></a>
                     </li>
                     <li th:if="${session?.user !=null}">
                         <img class="media-object img-rounded" th:src="${session?.user?.avatarUrl}" style="width: 18px;height: 18px;margin-top: 15px">
@@ -46,8 +46,8 @@
                             <li><a href="/logout">退出登陆</a></li>
                         </ul>
                     </li>
-                    <li th:if="${session?.user==null}"><a href="https://github.com/login/oauth/authorize?client_id=4146ce3195480451f292&redirect_uri=http://localhost:8585/callback&scope=user&state=1">登录</a></li>
-
+                    <li th:if="${session.user==null}"><a href="https://github.com/login/oauth/authorize?client_id=4146ce3195480451f292&redirect_uri=http://localhost:8585/callback&scope=user&state=1">登录</a></li>
+                    <!--5f9fa0429cad9a5da2b8  4146ce3195480451f292-->
                 </ul>
             </div>
         </div>
