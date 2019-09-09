@@ -46,19 +46,27 @@ public class PublishController {
     }
 
     @GetMapping("/publish")
-    public String publish(HttpServletRequest request,Model model){
-        notificationService.setReplyCount(request, model);
+    public String publish(){
         return "publish";
     }
 
+//    @RequestMapping("publish")
+//    public String test(
+//            String title,
+//            String description,
+//            String tag
+//    ){
+//        System.out.println("第一个参数"+title+"第二个参数"+description+"第三个参数"+tag);
+//        return "redirect:/";
+//    }
 
-    @RequestMapping("/publish")
+    @RequestMapping("publish")
     public String doPublish(String title,
                             String description,
                             String tag,
+                            @RequestParam(value ="id", required =false,defaultValue = "0") long id,
                             HttpServletRequest request,
-                            @RequestParam(value ="id", required =false) long id,
-                            Model model){//
+                            Model model){
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
